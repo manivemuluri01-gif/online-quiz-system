@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Online Quiz System with Result Analytics</title>
+
+<style>
+
+body{
+font-family: Arial, sans-serif;
+background:#f4f6f9;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+}
+
+.container{
+background:white;
+padding:30px;
+width:500px;
+border-radius:10px;
+box-shadow:0 4px 10px rgba(0,0,0,0.2);
+}
+
+h1{
+text-align:center;
+color:#333;
+}
+
+.question{
+font-size:18px;
+margin-bottom:15px;
+}
+
+.option{
+display:block;
+margin:8px 0;
+padding:10px;
+border:1px solid #ccc;
+border-radius:5px;
+cursor:pointer;
+}
+
+.option:hover{
+background:#f0f0f0;
+}
+
+button{
+margin-top:20px;
+padding:10px 20px;
+border:none;
+background:#007bff;
+color:white;
+border-radius:5px;
+cursor:pointer;
+}
+
+button:hover{
+background:#0056b3;
+}
+
+.result{
+text-align:center;
+}
+
+.analytics{
+margin-top:15px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Online Quiz</h1>
+
+<div id="quiz">
+
+<div id="question" class="question"></div>
+
+<div id="options"></div>
+
+<button onclick="nextQuestion()">Next</button>
+
+</div>
+
+<div id="result" class="result" style="display:none">
+
+<h2>Quiz Result</h2>
+
+<p id="score"></p>
+
+<div class="analytics">
+<p id="percentage"></p>
+<p id="grade"></p>
+</div>
+
+<button onclick="restartQuiz()">Restart Quiz</button>
+
+</div>
+
+</div>
+
+<script>
+
+const quizData = [
+
+{
+question: "Which data structure uses FIFO?",
+options: ["Stack","Queue","Tree","Graph"],
+answer: "Queue"
+},
+
+{
+question: "Which language is used for web page structure?",
+options: ["Python","HTML","Java","C++"],
+answer: "HTML"
+},
+
+{
+question: "Which sorting algorithm is fastest on average?",
+options: ["Bubble Sort","Quick Sort","Selection Sort","Insertion Sort"],
+answer: "Quick Sort"
+},
+
+{
+question: "Which company developed Java?",
+options: ["Microsoft","Sun Microsystems","Google","Apple"],
+answer: "Sun Microsystems"
+},
+
+{
+question: "Which database language is used for queries?",
+options: ["SQL","C","Java","HTML"],
+answer: "SQL"
+}
+
+];
+
+let currentQuestion = 0;
+let score = 0;
+let selectedOption = "";
+
+function loadQuestion(){
+
+const q = quizData[currentQuestion];
+
+document.getElementById("question").innerText = q.question;
+
+let optionsHTML = "";
+
+q.options.forEach(option=>{
+optionsHTML += `<div class="option" onclick="selectOption('${option}')">${option}</div>`;
+});
+
+document.getElementById("options").innerHTML = optionsHTML;
+
+}
+
+function selectOption(option){
+
+selectedOption = option;
+
+}
+
+function nextQuestion(){
+
+if(selectedOption === quizData[currentQuestion].answer){
+score++;
+}
+
+selectedOption = "";
+currentQuestion++;
+
+if(currentQuestion < quizData.length){
+loadQuestion();
+}
+else{
+showResult();
+}
+
+}
+
+function showResult(){
+
+document.getElementById("quiz").style.display="none";
+document.getElementById("result").style.display="block";
+
+let percentage = (score/quizData.length)*100;
+
+let grade;
+
+if(percentage >= 80){
+grade="Excellent";
+}
+else if(percentage >= 60){
+grade="Good";
+}
+else if(percentage >= 40){
+grade="Average";
+}
+else{
+grade="Needs Improvement";
+}
+
+document.getElementById("score").innerText =
+"Correct Answers: "+score+" / "+quizData.length;
+
+document.getElementById("percentage").innerText =
+"Percentage: "+percentage.toFixed(2)+"%";
+
+document.getElementById("grade").innerText =
+"Performance: "+grade;
+
+}
+
+function restartQuiz(){
+
+currentQuestion=0;
+score=0;
+
+document.getElementById("quiz").style.display="block";
+document.getElementById("result").style.display="none";
+
+loadQuestion();
+
+}
+
+loadQuestion();
+
+</script>
+
+</body>
+</html>
